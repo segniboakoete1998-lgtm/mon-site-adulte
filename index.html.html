@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>SEGNIBO &amp; Dieu Quiz</title>
+<style>
+  :root{
+    --bg1: #0f172a;
+    --bg2: #0b3d91;
+    --card: #ffffff;
+    --accent: #ffd166;
+    --accent-2: #06d6a0;
+    --muted: #6b7280;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Inter, system-ui, Arial, sans-serif;
+    background: linear-gradient(160deg,var(--bg1),var(--bg2));
+    color:#111827;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .wrap{
+    width:100%;
+    max-width:900px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+    border-radius:16px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    overflow:hidden;
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap:0;
+  }
+  header.game-header{
+    grid-column: 1 / -1;
+    padding:18px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background: linear-gradient(90deg, rgba(6,182,212,0.12), rgba(255,209,102,0.08));
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .brand{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .logo{
+    width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;align-items:center;justify-content:center;color:#06283D;font-weight:700;font-size:20px;
+    box-shadow:0 6px 18px rgba(3,10,44,0.25);
+  }
+  h1{font-size:20px;margin:0;color:#06283D}
+  .subtitle{font-size:13px;color:var(--muted);margin-top:4px}
+  .controls{display:flex;gap:10px;align-items:center}
+  .btn{
+    border:0;padding:8px 12px;border-radius:10px;background:#06283D;color:white;cursor:pointer;font-weight:600;
+    box-shadow:0 6px 14px rgba(3,10,44,0.18);
+  }
+  .btn.secondary{background:white;color:#06283D;border:1px solid rgba(0,0,0,0.06)}
+  main.quiz-area{
+    padding:28px;
+  }
+  .card{
+    background: #fff;border-radius:12px;padding:18px;box-shadow:0 8px 20px rgba(2,6,23,0.06);
+  }
+  .question-num{font-size:13px;color:var(--muted);margin-bottom:8px}
+  .question{font-size:20px;font-weight:700;color:#06283D;margin-bottom:14px}
+  .answers{display:grid;gap:12px}
+  .answer{
+    padding:12px;border-radius:10px;border:2px solid rgba(6,40,73,0.06);cursor:pointer;background:linear-gradient(180deg,#f8fbff,#eef7ff);
+    font-weight:600;transition:all .18s ease; text-align:left;
+  }
+  .answer:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(3,10,44,0.06)}
+  .answer.correct{background:linear-gradient(90deg, #d1fae5,#b7ffd9);border-color:rgba(6,182,137,0.4)}
+  .answer.wrong{background:linear-gradient(90deg,#ffdede,#ffd6d6);border-color:rgba(220,38,38,0.2)}
+  .meta{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+  .next{background:var(--accent);border:none;color:#042A2B;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+  aside.sidebar{
+    padding:24px;background:linear-gradient(180deg,#fbfbff,#f6fbff);
+    border-left:1px solid rgba(0,0,0,0.04);
+  }
+  .score-box{background:linear-gradient(90deg,#fef3c7,#e6fffa);padding:14px;border-radius:12px;text-align:center;margin-bottom:14px}
+  .score-box h2{margin:0;color:#064e3b}
+  .donate{margin-top:12px;padding:12px;background:#06283D;color:white;border-radius:10px;text-align:center;font-weight:700}
+  .donate small{display:block;font-weight:400;opacity:0.9;margin-top:6px}
+  .donate .call{display:inline-block;margin-top:8px;background:#06d6a0;color:#042A2B;padding:8px 12px;border-radius:8px;text-decoration:none}
+  .donate .paybtn{display:inline-block;margin-top:8px;background:#ffd166;color:#042A2B;padding:8px 12px;border-radius:8px;text-decoration:none;margin-left:8px}
+  footer.footer{
+    grid-column:1/-1;padding:14px 24px;background:linear-gradient(180deg, rgba(6,40,73,0.02), rgba(6,40,73,0.01));display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted)
+  }
+  .small-note{font-size:13px;color:var(--muted)}
+  .centered-empty{display:flex;align-items:center;justify-content:center;height:200px;color:var(--muted)}
+  @media(max-width:880px){
+    .wrap{grid-template-columns:1fr; padding-bottom:10px}
+    header.game-header{flex-direction:column;gap:8px;align-items:flex-start}
+    aside.sidebar{order:2}
+    main.quiz-area{order:1}
+  }
+</style>
+</head>
+<body>
+<div aria-labelledby="title" class="wrap" role="application">
+<header class="game-header">
+<div class="brand">
+<div class="logo">SG</div>
+<div>
+<h1 id="title">SEGNIBO &amp; Dieu Quiz</h1>
+<div class="subtitle">Connais-tu la Bible ? Teste-toi et partage !</div>
+</div>
+</div>
+<div class="controls">
+<button class="btn secondary" id="restartBtn">Recommencer</button>
+<button class="btn" id="shareBtn">Partager</button>
+</div>
+</header>
+<main class="quiz-area">
+<div aria-live="polite" class="card" id="quizCard">
+<div class="question-num" id="qnum">Question 1 / 10</div>
+<div class="question" id="questionText">Chargement...</div>
+<div class="answers" id="answers"></div>
+<div class="meta">
+<div class="small-note" id="timer">Temps: --</div>
+<button class="next" id="nextBtn" style="display:none">Question suivante</button>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="score-box card">
+<h2 id="scoreTitle">Score: 0</h2>
+<p id="scoreDetail" style="margin:8px 0 0 0;color:var(--muted)">Commence le quiz pour marquer des points.</p>
+</div>
+<div class="card" style="padding:12px">
+<div style="font-weight:800;margin-bottom:8px">Soutenez le projet</div>
+<div class="donate">
+<div>Appelez pour un don</div>
+<a class="call" href="tel:+22897829674" id="callBtn">📞 +228 97829674</a>
+<a class="paybtn" href="#" id="payBtn" role="button">💰 Envoyer un don</a>
+<small>Flooz / Mobile Money : +228 97829674</small>
+</div>
+</div>
+<div class="card" style="margin-top:12px;padding:12px;text-align:center">
+<div style="font-weight:800;margin-bottom:8px">À propos</div>
+<div style="color:var(--muted);font-size:13px">Un projet pour aider les jeunes à connaître Christ. Merci pour ton soutien 🙏</div>
+</div>
+</aside>
+<footer class="footer">
+<div class="small-note">© SEGNIBO - SEGNIBO &amp; Dieu Quiz</div>
+<div class="small-note">Flooz / MoMo : +228 97829674</div>
+<div style="font-weight:700; color:#06d6a0; margin-top:8px; font-size:14px; text-align:center;">Contact &amp; Don : 📞 +228 97829674 - Flooz / Mobile Money</div></footer>
+</div>
+<script>
+// Questions bibliques (10 questions de base)
+// Chaque question: texte, réponses (array), index de la bonne réponse
+const questions = [
+  { q: "Qui est considéré comme le père du peuple d'Israël ?", a:["Moïse","Abraham","David","Noé"], correct:1 },
+  { q: "Combien de jours Noé et sa famille ont-ils passé dans l'arche pendant le déluge (selon la Bible) ?", a:["40 jours","7 jours","150 jours","365 jours"], correct:0 },
+  { q: "Quel roi a écrit beaucoup de psaumes dans la Bible ?", a:["Salomon","Ésaïe","David","Josué"], correct:2 },
+  { q: "Quel prophète a été avalé par un grand poisson ?", a:["Élie","Ézéchiel","Jonas","Michée"], correct:2 },
+  { q: "Dans l'Évangile, qui a trahi Jésus pour trente pièces d'argent ?", a:["Judas Iscariote","Pierre","Jean","Paul"], correct:0 },
+  { q: "Quel est le livre de sagesse attribué au roi Salomon ?", a:["Genèse","Proverbes","Ézéchiel","Actes"], correct:1 },
+  { q: "Où Jésus est-il né selon la Bible ?", a:["Nazareth","Bethléem","Jérusalem","Capernaüm"], correct:1 },
+  { q: "Combien de pains et de poissons Jésus a-t-il multiplié (selon le récit fameux) ?", a:["2 poissons et 5 pains","5 poissons et 2 pains","7 poissons et 3 pains","3 poissons et 6 pains"], correct:0 },
+  { q: "Quel disciple a marché sur l'eau avec Jésus (avant de douter) ?", a:["Thomas","Pierre","Matthieu","André"], correct:1 },
+  { q: "Quel est le dernier livre du Nouveau Testament ?", a:["Hébreux","Apocalypse","Jude","Philippiens"], correct:1 }
+];
+
+let current = 0;
+let score = 0;
+let answering = false;
+let timerInterval = null;
+let timeLeft = 20; // secondes par question
+
+const qnumEl = document.getElementById('qnum');
+const questionText = document.getElementById('questionText');
+const answersEl = document.getElementById('answers');
+const nextBtn = document.getElementById('nextBtn');
+const scoreTitle = document.getElementById('scoreTitle');
+const scoreDetail = document.getElementById('scoreDetail');
+const timerEl = document.getElementById('timer');
+const restartBtn = document.getElementById('restartBtn');
+const shareBtn = document.getElementById('shareBtn');
+const callBtn = document.getElementById('callBtn');
+const payBtn = document.getElementById('payBtn');
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timeLeft = 20;
+  timerEl.textContent = 'Temps: ' + timeLeft + 's';
+  timerInterval = setInterval(()=>{
+    timeLeft--;
+    timerEl.textContent = 'Temps: ' + timeLeft + 's';
+    if(timeLeft<=0){
+      clearInterval(timerInterval);
+      // auto-skip as wrong
+      showCorrectAndNext(null,true);
+    }
+  },1000);
+}
+
+function renderQuestion(){
+  answering = true;
+  startTimer();
+  const q = questions[current];
+  qnumEl.textContent = `Question ${current+1} / ${questions.length}`;
+  questionText.textContent = q.q;
+  answersEl.innerHTML = '';
+  q.a.forEach((ans,idx)=>{
+    const btn = document.createElement('button');
+    btn.className = 'answer';
+    btn.textContent = ans;
+    btn.onclick = ()=> selectAnswer(idx,btn);
+    answersEl.appendChild(btn);
+  });
+  nextBtn.style.display = 'none';
+}
+
+function selectAnswer(idx,btn){
+  if(!answering) return;
+  answering = false;
+  clearInterval(timerInterval);
+  const correctIdx = questions[current].correct;
+  if(idx===correctIdx){
+    score++;
+    btn.classList.add('correct');
+    showToast('Bonne réponse ! 🎉');
+  } else {
+    btn.classList.add('wrong');
+    showToast('Mauvaise réponse 😕');
+    // highlight correct
+    const children = Array.from(answersEl.children);
+    children.forEach((c,i)=>{ if(i===correctIdx) c.classList.add('correct') });
+  }
+  nextBtn.style.display = 'inline-block';
+  updateScoreUI();
+}
+
+function showCorrectAndNext(selectedIdx, timedOut=false){
+  answering = false;
+  clearInterval(timerInterval);
+  const correctIdx = questions[current].correct;
+  const children = Array.from(answersEl.children);
+  if(selectedIdx===null || timedOut){
+    // mark correct
+    children.forEach((c,i)=>{ if(i===correctIdx) c.classList.add('correct') });
+    showToast('Temps écoulé ! La bonne réponse est en surbrillance.');
+  }
+  nextBtn.style.display = 'inline-block';
+  updateScoreUI();
+}
+
+function updateScoreUI(){
+  scoreTitle.textContent = `Score: ${score}`;
+  scoreDetail.textContent = `Questions répondues: ${current+ (answering?0:1)} / ${questions.length}`;
+}
+
+nextBtn.addEventListener('click',()=>{
+  current++;
+  if(current < questions.length){
+    renderQuestion();
+  } else {
+    showResult();
+  }
+});
+
+function showResult(){
+  // replace quiz card with result summary
+  const card = document.getElementById('quizCard');
+  card.innerHTML = `
+    <div style="text-align:center;padding:18px">
+      <h2 style="margin:0;color:#06283D">Résultat</h2>
+      <p style="color:var(--muted);margin-top:8px">Tu as obtenu <strong>${score} / ${questions.length}</strong></p>
+      <p style="margin-top:12px;color:var(--muted)">Merci d'avoir joué. Partage et invite tes amis !</p>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:14px">
+        <button class="next" id="playAgain">Rejouer</button>
+        <a class="call" href="tel:+22897829674" style="text-decoration:none;padding:10px 14px;border-radius:10px;background:#06d6a0;color:#042A2B;font-weight:700">📞 Appeler pour soutenir</a>
+      </div>
+    </div>
+  `;
+  document.getElementById('playAgain').addEventListener('click',resetGame);
+}
+
+function resetGame(){
+  current = 0;
+  score = 0;
+  updateScoreUI();
+  renderQuestion();
+}
+
+restartBtn.addEventListener('click',resetGame);
+shareBtn.addEventListener('click',()=>{
+  const url = window.location.href;
+  if(navigator.share){
+    navigator.share({title:'SEGNIBO & Dieu Quiz', text:'Teste tes connaissances bibliques !', url});
+  } else {
+    navigator.clipboard.writeText(url).then(()=>alert('Lien copié ! Colle-le pour partager.'));
+  }
+});
+
+// Pay / Donate modal (simple)
+payBtn.addEventListener('click',(e)=>{
+  e.preventDefault();
+  const info = `Instructions pour envoyer un don:\n\nFLOOZ : +228 97829674\nMOBILE MONEY : +228 97829674\n\nMerci de soutenir le développement du jeu ! 🙏`;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText('FLOOZ: +228 97829674').then(()=>{
+      alert(info + '\n\nLe numéro Flooz a été copié dans votre presse-papiers.');
+    });
+  } else {
+    alert(info);
+  }
+});
+
+// Small toast
+function showToast(msg){
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.position='fixed';t.style.bottom='24px';t.style.left='50%';t.style.transform='translateX(-50%)';
+  t.style.padding='10px 16px';t.style.background='rgba(6,40,73,0.95)';t.style.color='white';t.style.borderRadius='10px';
+  t.style.fontWeight='700';t.style.zIndex=9999;document.body.appendChild(t);
+  setTimeout(()=>{ t.style.transition='opacity .5s'; t.style.opacity=0; setTimeout(()=>t.remove(),600) },1500);
+}
+
+// Initialize
+updateScoreUI();
+renderQuestion();
+</script>
+</body>
+</html>

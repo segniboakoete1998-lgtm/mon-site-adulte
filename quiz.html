@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quiz Biblique</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; background: #f0f8ff; }
+  .quiz-container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
+  .question { font-size: 1.2em; margin-bottom: 15px; }
+  .answer-btn { display: block; width: 100%; margin: 8px 0; padding: 10px; font-size: 1em; border: 1px solid #007bff; border-radius: 5px; background: #e7f1ff; cursor: pointer; }
+  .answer-btn:hover { background: #d0e4ff; }
+  .score { font-size: 1.2em; text-align: center; margin-top: 20px; }
+  .next-btn { margin-top: 15px; padding: 10px 20px; font-size: 1em; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div id="question" class="question"></div>
+  <div id="answers"></div>
+  <button id="next-btn" class="next-btn" style="display:none;">Question Suivante</button>
+  <div id="score" class="score" style="display:none;"></div>
+</div>
+
+<script>
+  const quizData = [
+    {
+      question: "Qui est le premier homme créé par Dieu ?",
+      answers: ["Adam", "Noé", "Moïse", "Abraham"],
+      correct: 0
+    },
+    {
+      question: "Combien de jours a duré la création du monde ?",
+      answers: ["5 jours", "6 jours", "7 jours", "4 jours"],
+      correct: 1
+    },
+    {
+      question: "Quel est le plus grand commandement selon Jésus ?",
+      answers: [
+        "Tu aimeras ton prochain comme toi-même",
+        "Tu ne tueras point",
+        "Tu aimeras Dieu de tout ton cœur",
+        "Tu ne voleras point"
+      ],
+      correct: 2
+    },
+    {
+      question: "Qui a traversé la mer Rouge avec les Israélites ?",
+      answers: ["David", "Moïse", "Josué", "Aaron"],
+      correct: 1
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const questionEl = document.getElementById('question');
+  const answersEl = document.getElementById('answers');
+  const nextBtn = document.getElementById('next-btn');
+  const scoreEl = document.getElementById('score');
+
+  function loadQuestion() {
+    nextBtn.style.display = 'none';
+    scoreEl.style.display = 'none';
+    answersEl.innerHTML = '';
+    questionEl.style.display = 'block';
+    answersEl.style.display = 'block';
+
+    questionEl.textContent = quizData[currentQuestion].question;
+
+    quizData[currentQuestion].answers.forEach((answer, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'answer-btn';
+      btn.textContent = answer;
+      btn.onclick = () => selectAnswer(index);
+      answersEl.appendChild(btn);
+    });
+  }
+
+  function selectAnswer(selected) {
+    const correct = quizData[currentQuestion].correct;
+    if (selected === correct) {
+      score++;
+      alert('Bonne réponse ! 🎉');
+    } else {
+      alert('Mauvaise réponse 😕. La bonne réponse était : ' + quizData[currentQuestion].answers[correct]);
+    }
+    nextBtn.style.display = 'inline-block';
+    Array.from(answersEl.children).forEach(btn => btn.disabled = true);
+  }
+
+  nextBtn.onclick = () => {
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+      loadQuestion();
+    } else {
+      showScore();
+    }
+  };
+
+  function showScore() {
+    questionEl.style.display = 'none';
+    answersEl.style.display = 'none';
+    nextBtn.style.display = 'none';
+    scoreEl.style.display = 'block';
+    scoreEl.textContent = `Ton score est ${score} / ${quizData.length}. Merci d’avoir joué ! 🙏`;
+  }
+
+  loadQuestion();
+</script>
+
+</body>
+</html>

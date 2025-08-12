@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Site Adulte - Vérification d'âge</title>
+  <style>
+    /* Styles globaux */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #121212;
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background: #1f1f1f;
+      width: 100%;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.8);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    main {
+      max-width: 900px;
+      width: 90%;
+      margin: 20px auto 40px auto;
+      flex-grow: 1;
+    }
+    .age-check, .content {
+      background: #222;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #000;
+      text-align: center;
+    }
+    button {
+      background: #ff4444;
+      border: none;
+      color: white;
+      font-weight: bold;
+      padding: 12px 25px;
+      margin: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background: #cc3333;
+    }
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 20px;
+      background: black;
+    }
+    .ads {
+      margin-top: 30px;
+      text-align: center;
+    }
+    footer {
+      background: #1f1f1f;
+      width: 100%;
+      padding: 15px;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      box-shadow: inset 0 1px 3px rgba(255,255,255,0.05);
+    }
+    nav a {
+      color: #eee;
+      margin: 0 12px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    /* Form contact */
+    form {
+      margin-top: 30px;
+      text-align: left;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    input[type="submit"] {
+      background: #ff4444;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+    input[type="submit"]:hover {
+      background: #cc3333;
+    }
+    /* Responsive */
+    @media(max-width: 600px){
+      iframe {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Mon Site Adulte Légal - 18+ obligatoire
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="cgu.html">CGU</a>
+      <a href="privacy.html">Politique de confidentialité</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Contrôle d'âge -->
+    <div class="age-check" id="age-check">
+      <h1>Vérification d'âge</h1>
+      <p>Ce site contient du contenu réservé aux personnes majeures (18 ans et plus).</p>
+      <p>Confirmez-vous avoir 18 ans ou plus ?</p>
+      <button onclick="allowAccess()">Oui, j'ai 18 ans ou plus</button>
+      <button onclick="denyAccess()">Non, je n'ai pas 18 ans</button>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="content" id="content" style="display:none;">
+      <h2>Bienvenue sur le site !</h2>
+      <p>Voici une vidéo exemple que tu peux remplacer par tes contenus :</p>
+      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+
+      <div class="ads">
+        <h3>Publicité</h3>
+        <!-- Exemple pub ExoClick -->
+        <script type="text/javascript" src="https://a.exoclick.com/ads.js"></script>
+        <div id="exoAd" style="width:728px; height:90px; margin: 0 auto;">
+          <script type="text/javascript">
+            ExoClick.display('exoAd');
+          </script>
+        </div>
+      </div>
+
+      <section id="contact">
+        <h3>Contactez-nous</h3>
+        <form onsubmit="return sendContact(event)">
+          <label for="name">Nom :</label>
+          <input type="text" id="name" name="name" required />
+
+          <label for="email">Email :</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="message">Message :</label>
+          <textarea id="message" name="message" rows="4" required></textarea>
+
+          <input type="submit" value="Envoyer" />
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 Mon Site Adulte Légal - Tous droits réservés
+  </footer>
+
+  <script>
+    function allowAccess() {
+      localStorage.setItem('isAdult', 'true');
+      document.getElementById('age-check').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    }
+
+    function denyAccess() {
+      alert("Désolé, vous ne pouvez pas accéder à ce site.");
+      window.location.href = "https://www.google.com";
+    }
+
+    window.onload = function() {
+      if (localStorage.getItem('isAdult') === 'true') {
+        allowAccess();
+      }
+    };
+
+    function sendContact(event) {
+      event.preventDefault();
+      alert('Merci pour votre message ! (fonction à connecter à un backend ou email)');
+      // Ici tu peux ajouter code pour envoyer le message par email (via backend ou service tiers)
+      event.target.reset();
+      return false;
+    }
+  </script>
+</body>
+</html>

@@ -118,7 +118,7 @@ function App(){
   // Load initial sample
   useEffect(()=>{
     if(verseBank.length===0){
-      fetch('sample_bible.json').then(r=>r.json()).then(setVerseBank).catch(()=>{});
+      fetch('bible_fr_sample.json').then(r=>r.json()).then(setVerseBank).catch(()=>{});
     }
   },[]);
 
@@ -271,7 +271,7 @@ function App(){
             <input type="file" accept="application/json" style={{display:"none"}} ref={fileInput} onChange={onFile} />
             <div className="row">
               <button className="btn" onClick={()=>fileInput.current?.click()}>Choisir un fichier .json</button>
-              <a className="btn" href="sample_bible.json" download>Exemple JSON</a>
+              <a className="btn" href="bible_fr_sample.json" download>Exemple JSON</a>
             </div>
           </div>
         </div>
